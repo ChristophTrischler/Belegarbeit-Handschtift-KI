@@ -7,3 +7,4 @@ uvicorn
 Fastapi
 python-multipart
 scikit-learn
+imutils

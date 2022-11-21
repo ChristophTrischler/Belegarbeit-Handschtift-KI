@@ -1,20 +1,50 @@
 import cv2
 import numpy as np
+import imutils
 
-# Read image
-img = cv2.imread(r'C:\Users\chris\projects\Belegarbeit-Handschtift-KI\images\20-11-2022-16-53-09.png', cv2.IMREAD_GRAYSCALE)
-# Set up the blob detector.
-detector = cv2.SimpleBlobDetector_create()
 
-# Detect blobs from the image.
-keypoints = detector.detect(img)
-pts = [key_point.pt for key_point in keypoints]
-print(pts)
+def sort_contours(cnts, method="left-to-right"):
+    reverse = False
+    i = 0
+    if method == "right-to-left" or method == "bottom-to-top":
+        reverse = True
+    if method == "top-to-bottom" or method == "bottom-to-top":
+        i = 1
+    boundingBoxes = [cv2.boundingRect(c) for c in cnts]
+    (cnts, boundingBoxes) = zip(*sorted(zip(cnts, boundingBoxes),
+    key=lambda b:b[1][i], reverse=reverse))
+    # return the list of sorted contours and bounding boxes
+    return (cnts, boundingBoxes)
 
-blank = np.zeros((1, 1))
-# Draw detected blobs as red circles.
-# cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS - This method draws detected blobs as red circles and ensures that the size of the circle corresponds to the size of the blob.
-blobs = cv2.drawKeypoints(img, keypoints, blank, (0, 255, 255), cv2.DRAW_MATCHES_FLAGS_DEFAULT)
+def get_letters(img):
+    letters = []
+    image = cv2.imread(img)
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    ret,thresh1 = cv2.threshold(gray ,127,255,cv2.THRESH_BINARY_INV)
+    dilated = cv2.dilate(thresh1, None, iterations=2)
 
-# Show keypoints
-cv2.imwrite("out/test.png", blobs)
+    cnts = cv2.findContours(dilated.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    cnts = sort_contours(cnts, method="left-to-right")[0]
+    # loop over the contours
+    for c in cnts:
+        if cv2.contourArea(c) > 10:
+            (x, y, w, h) = cv2.boundingRect(c)
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        roi = gray[y:y + h, x:x + w]
+        thresh = cv2.threshold(roi, 0, 255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        thresh = cv2.resize(thresh, (32, 32), interpolation = cv2.INTER_CUBIC)
+        thresh = thresh.astype("float32") / 255.0
+        thresh = np.expand_dims(thresh, axis=-1)
+        thresh = thresh.reshape(1,32,32,1)
+        ypred = model.predict(thresh)
+        ypred = LB.inverse_transform(ypred)
+        [x] = ypred
+        letters.append(x)
+    return letters, image
+
+if __name__ == "__main__":
+    cv.imread()
+    letter, img = get_letters()
+
+    for x,l in enumerate(le)

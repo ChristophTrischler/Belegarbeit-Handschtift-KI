@@ -1,10 +1,12 @@
 import tensorflow as tf
 from tensorflow import keras
 from keras.models import Sequential, Model
-from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, MaxPool2D, BatchNormalization, Dropout, GlobalAvgPool2D
+from keras.layers import Dense, Flatten, Conv2D, MaxPooling2D, MaxPool2D, BatchNormalization, Dropout, GlobalAvgPool2D,\
+    Activation, Input
 from keras.optimizers import Adam
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer
 import pandas as pd
 import cv2
 import numpy as np
@@ -14,32 +16,90 @@ from matplotlib import pyplot as plt
 should = np.array([x for x in range(10)])  # array of the nums how they should be
 
 
-def getData():
-    ydata = []
-    xdata = []
+def load_az_dataset(datasetPath):
+    # List for storing data
+    data = []
 
-    for row in open("A_ZHandwrittenData.csv", "r"):
-        # in csv first colum label rest image pxs
+    # List for storing labels
+    labels = []
+
+    for row in open(datasetPath):  # Openfile and start reading each row
+        # Split the row at every comma
         row = row.split(",")
-        ydata.append(int(row[0]) + 10)  # offset of 10 <= 0-9 are the numbers => 10-35 Letters
 
-        img = np.array([int(i) for i in row[1:]]).reshape((28, 28))
-        xdata.append(img)
+        # row[0] contains label
+        label = int(row[0])
 
-    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()  # load numberdata from keras
+        # Other all collumns contains pixel values make a saperate array for that
+        image = np.array([int(x) for x in row[1:]], dtype="uint8")
 
-    xdata.extend(x_test)
-    xdata.extend(x_train)
-    ydata.extend(y_train)
-    ydata.extend(y_test)
+        # Reshaping image to 28 x 28 pixels
+        image = image.reshape((28, 28))
 
-    ydata = np.array(ydata,  dtype=np.uint8)
-    xdata = np.array(xdata, dtype=np.uint8)
+        # append image to data
+        data.append(image)
 
-    xdata = [cv2.threshold(x, 50, 255, cv2.THRESH_BINARY)[1] for x in xdata]
-    xdata = keras.utils.normalize(xdata)
+        # append label to labels
+        labels.append(label)
 
-    x_train, x_test, y_train, y_test = train_test_split(xdata, ydata, test_size=0.2, random_state=420)
+    # Converting data to numpy array of type float32
+    data = np.array(data, dtype='float32')
+
+    # Converting labels to type int
+    labels = np.array(labels, dtype="int")
+
+    return (data, labels)
+
+
+def getData():
+    # load data from tensorflow framework
+    (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+
+    # Stack train data and test data to form single array
+    mnist_data = np.vstack([x_train, x_test])
+
+    # Horizontal stacking labels of train and test set
+    mnist_labels = np.hstack([y_train, y_test])
+
+    # Uniques and counts of train labels
+    #unique_train, counts_train = np.unique(y_train, return_counts=True)
+    #print(f"Value counts of y_train modalities: {counts_train}\n")
+
+    # Uniques and counts of test labels
+    #unique_test, counts_test = np.unique(y_test, return_counts=True)
+    #print(f"Value counts of y_test modalities: {counts_test}")
+
+    az_data, az_labels = load_az_dataset("A_ZHandwrittenData.csv")
+
+    # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are not incorrectly labeled
+
+    az_labels += 10
+
+    # stack the A-Z data and labels with the MNIST digits data and labels
+
+    data = np.vstack([az_data, mnist_data])
+    labels = np.hstack([az_labels, mnist_labels])
+
+    # add a channel dimension to every image in the dataset and scale the
+    # pixel intensities of the images from [0, 255] down to [0, 1]
+
+    data = np.expand_dims(data, axis=-1)
+    data /= 255.0
+
+    """le = LabelBinarizer()
+    labels = le.fit_transform(labels)
+
+    counts = labels.sum(axis=0)
+
+    # account for skew in the labeled data
+    classTotals = labels.sum(axis=0)
+    classWeight = {}
+
+    # loop over all classes and calculate the class weight
+    for i in range(0, len(classTotals)):
+        classWeight[i] = classTotals.max() / classTotals[i]"""
+
+    (x_train, x_test, y_train, y_test) = train_test_split(data, labels, test_size=0.20, stratify=labels, random_state=42)
 
     return x_train, y_train, x_test, y_test
 
