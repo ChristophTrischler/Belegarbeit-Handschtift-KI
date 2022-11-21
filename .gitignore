@@ -126,4 +126,10 @@ venv.bak/
 dmypy.json
 
 # Pyre type checker
-.pyre/
+.pyre/env/
+
+images/
+out/
+examples/
+.idea/
+.\A_ZHandwrittenData.csv

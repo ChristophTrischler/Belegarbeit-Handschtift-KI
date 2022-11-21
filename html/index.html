@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API</title>
+    <script defer src="index.js"></script>
+    <style>
+        .center {
+            align-content: center;
+        }
+
+        .space {
+
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Belegarbeit-Handschrift-KI</h1>
+        <input type="file" name="imgFile" id="fileupload">
+        <input type="submit" name="submit" id="submit">
+        <div id="images"></div>
+    </div>
+    <template id="imgTemplate" class = "img" >
+        <div>
+            <h3 id="heading">Img: </h3>
+            <img id="img"  src="" alt="" height="368px" width="74px">
+            <div id="text"> </div>
+        </div>
+
+    </template>
+</body>
+</html>
