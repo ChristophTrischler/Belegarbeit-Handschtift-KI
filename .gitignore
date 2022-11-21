@@ -130,6 +130,5 @@ dmypy.json
 
 images/
 out/
-examples/
 .idea/
 .\A_ZHandwrittenData.csv
