@@ -16,9 +16,8 @@ def sort_contours(cnts, method="left-to-right"):
     # return the list of sorted contours and bounding boxes
     return (cnts, boundingBoxes)
 
-def get_letters(img):
+def get_letters(image):
     letters = []
-    image = cv2.imread(img)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     ret,thresh1 = cv2.threshold(gray ,127,255,cv2.THRESH_BINARY_INV)
     dilated = cv2.dilate(thresh1, None, iterations=2)
@@ -37,14 +36,19 @@ def get_letters(img):
         thresh = thresh.astype("float32") / 255.0
         thresh = np.expand_dims(thresh, axis=-1)
         thresh = thresh.reshape(1,32,32,1)
-        ypred = model.predict(thresh)
-        ypred = LB.inverse_transform(ypred)
-        [x] = ypred
-        letters.append(x)
+        letters.append(thresh)
     return letters, image
 
-if __name__ == "__main__":
-    cv.imread()
-    letter, img = get_letters()
 
-    for x,l in enumerate(le)
+
+def main():
+    testimg = cv2.imread(r"C:\Users\CHr\projects\Belegarbeit-Handschtift-KI\examples\Test8.jpeg")
+    letters, img = get_letters(testimg)
+    cv2.imwrite("out/img.png", img)
+    for x, l in enumerate(letters):
+        cv2.imwrite(f"out/img{x}.png", l[0])
+        print(l.shape)
+
+
+if __name__ == "__main__":
+    main()

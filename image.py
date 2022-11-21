@@ -54,10 +54,12 @@ def createNumImages(img=cv2.imread("examples/Test8.jpeg", 1)):
     num_imgs = [cv2.threshold(i, 50, 255, cv2.THRESH_BINARY)[1] for i in num_imgs]
     num_imgs = [cv2.resize(i, (28, 28), interpolation=cv2.INTER_AREA) for i in num_imgs]
 
+
     for i, x in enumerate(num_imgs):
         cv2.imwrite(f"out/nums/img_{i}.png", cv2.cvtColor(np.invert(x), cv2.COLOR_GRAY2BGR))
 
     num_imgs = np.array(num_imgs, np.float32)
+    num_imgs /= 255
 
     return target, num_imgs
 

@@ -82,6 +82,8 @@ def getData():
 
     # add a channel dimension to every image in the dataset and scale the
     # pixel intensities of the images from [0, 255] down to [0, 1]
+    #data = [cv2.resize(image, (32, 32)) for image in data]
+    data = np.array(data, dtype="float32")
 
     data = np.expand_dims(data, axis=-1)
     data /= 255.0
