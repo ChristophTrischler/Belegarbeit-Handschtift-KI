@@ -138,7 +138,7 @@ def createModel(data=None):
     model.add(Dense(units=36, activation='softmax'))
 
     model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    model.fit(x_train, y_train, epochs=50)
+    model.fit(x_train, y_train, epochs=100)
     return model
 
 
