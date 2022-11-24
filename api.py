@@ -35,7 +35,7 @@ async def postImage(file: UploadFile = File(...)):
 
     return {
         "filename": f"{filename}",  
-        "nums": [int(p) for p in predictions],  # list of np.ints to normal ints
+        "nums": [str(p) for p in predictions],  # list of np.ints to normal ints
         "accuracy": acc,
     }
 
