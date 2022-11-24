@@ -1,3 +1,4 @@
 A_ZHandwrittenData.csv filter=lfs diff=lfs merge=lfs -text
 *.csv filter=lfs diff=lfs merge=lfs -text
 model/* filter=lfs diff=lfs merge=lfs -text
+model/** filter=lfs diff=lfs merge=lfs -text
