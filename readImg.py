@@ -15,7 +15,7 @@ def main():
     img = cv2.bitwise_not(img)
     img = np.array(img, dtype=np.uint8)
     img = np.array([img])
-    print(testNumImg(img, model))
+    print(testImgs(img, model))
 
 
 if __name__ == "__main__":

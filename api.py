@@ -31,7 +31,7 @@ async def postImage(file: UploadFile = File(...)):
     img, nums = image.createNumImages(img)
     cv2.imwrite(f"images/{filename}.png", img)
 
-    predictions, acc = testNumImg(nums, model)  # predictions of the numbers and accuracy
+    predictions, acc = testImg(nums, model)  # predictions of the numbers and accuracy
 
     return {
         "filename": f"{filename}",  

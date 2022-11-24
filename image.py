@@ -2,9 +2,29 @@ import cv2
 import keras.utils
 import numpy as np
 from matplotlib import pyplot as plt
+from imutils import grab_contours
+from sys import argv
 
 
-def createNumImages(img=cv2.imread("examples/Test8.jpeg", 1)):
+def getBlobs(img):
+    cnts = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = grab_contours(cnts)
+    rects = [cv2.boundingRect(c) for c in cnts]
+    rects.sort(key=lambda y: y[0])
+    imgs = [img[y:y+h, x:x+w] for x, y, w, h in rects]
+    imgs = [np.array(i, np.uint8) for i in imgs]
+    imgs = [cv2.blur(i, (5, 5)) for i in imgs]
+    imgs = [cv2.threshold(i, 65, 255, cv2.THRESH_BINARY)[1] for i in imgs]
+    imgs = [cv2.resize(i, (32, 32), interpolation=cv2.INTER_AREA) for i in imgs]
+
+    imgs = np.array(imgs, np.float32)
+    imgs = np.expand_dims(imgs, axis=-1)
+    imgs /= 255
+
+    return imgs
+
+
+def readTest(img=cv2.imread("examples/Test8.jpeg", 1)):
     height, width, _ = img.shape
 
     # FIND THE RED POINTS
@@ -29,9 +49,7 @@ def createNumImages(img=cv2.imread("examples/Test8.jpeg", 1)):
     # array of the corner points in the img
     pts_src = np.array([red_pxs[up_left], red_pxs[up_right], red_pxs[down_left], red_pxs[down_right]], np.float32)
     # array of points in the new img
-    pts_dst = np.array([[0, 0], [74, 0], [0, 368], [74, 368]], np.float32)
-    pts_dst *= 10
-    print(pts_dst)
+    pts_dst = np.array([[0, 0], [740, 0], [0, 3680], [740, 3680]], np.float32)
     # creating of a rotation matrix
     m = cv2.getPerspectiveTransform(pts_src, pts_dst)
     # rotating the img in to the new format
@@ -44,34 +62,29 @@ def createNumImages(img=cv2.imread("examples/Test8.jpeg", 1)):
 
     target = cv2.bitwise_and(target, target, mask=brightness_mask)
 
-    plt.imshow(target)
-    plt.show()
-
     cv2.imwrite("out/target.png", target)
 
-    num_imgs = [target[x*360+100:(x+1)*360+20, 400:-60] for x in range(10)]
-    num_imgs = [cv2.blur(i, (44, 44)) for i in num_imgs]
-    num_imgs = [cv2.threshold(i, 50, 255, cv2.THRESH_BINARY)[1] for i in num_imgs]
-    num_imgs = [cv2.resize(i, (32, 32), interpolation=cv2.INTER_AREA) for i in num_imgs]
+    imgs = [target[x*360+100:(x+1)*360+10, 400:-60] for x in range(10)]
+    imgs = [cv2.blur(i, (11, 11)) for i in imgs]
+    imgs = [cv2.threshold(i, 50, 255, cv2.THRESH_BINARY)[1] for i in imgs]
 
-    for i, x in enumerate(num_imgs):
+    for i, x in enumerate(imgs):
         cv2.imwrite(f"out/nums/img_{i}.png", cv2.cvtColor(np.invert(x), cv2.COLOR_GRAY2BGR))
 
-    num_imgs = np.array(num_imgs, np.float32)
-    num_imgs = np.expand_dims(num_imgs, axis=-1)
-    num_imgs /= 255
+    imgs = [getBlobs(image) for image in imgs]
 
-    return target, num_imgs
+    return target, imgs
 
 
 def main():
-    with open("output.txt", "w", encoding="UTF-8") as f:
-        imgs = createNumImages()
-        for i, x in enumerate(imgs):
-            for row in x:
-                f.write(str(row).replace("\n", "") + "\n")
-            cv2.imwrite(f"nums/img_{i}.png", x)
+    m = loadModel()
+    img = cv2.imread(argv[1])
+    t, imgs = readTest(img)
+    for i, x in enumerate(imgs):
+        print(testImgs(x, m)[0])
+        cv2.imwrite(f"nums/img_{i}.png", x)
 
 
 if __name__ == "__main__":
+    from model import loadModel, Labels, testImgs
     main()

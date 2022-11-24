@@ -52,7 +52,7 @@ def load_az_dataset(datasetPath):
     # Converting labels to type int
     labels = np.array(labels, dtype="int")
 
-    return (data, labels)
+    return data, labels
 
 
 def getData():
@@ -67,7 +67,8 @@ def getData():
 
     az_data, az_labels = load_az_dataset("A_ZHandwrittenData.csv")
 
-    # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are not incorrectly labeled
+    # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are
+    # not incorrectly labeled
 
     az_labels += 10
 
@@ -78,15 +79,14 @@ def getData():
 
     data = [cv2.resize(image, (32, 32)) for image in data]  # reshape to 32px * 32px for ResNet50
     data = np.array(data, dtype="float32")
-
     data = np.expand_dims(data, axis=-1)
     data /= 255.0  # from int 0 to 255 to float 0 to 1
 
     """le = LabelBinarizer()
     labels = le.fit_transform(labels)"""
 
-
-    (x_train, x_test, y_train, y_test) = train_test_split(data, labels, test_size=0.20, stratify=labels, random_state=42)
+    (x_train, x_test, y_train, y_test) = train_test_split(data, labels, test_size=0.20, stratify=labels,
+                                                          random_state=42)
 
     return x_train, y_train, x_test, y_test
 
@@ -95,24 +95,6 @@ def createModel(data=None):
     if not data:
         data = getData()
     x_train, y_train, x_test, y_test = data
-
-    """model = Sequential()
-    model.add(Conv2D(75, (3, 3), strides=1, padding='same', activation='relu', input_shape=(28, 28, 1)))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-
-    model.add(Conv2D(50, (3, 3), strides=1, padding='same', activation='relu'))
-    model.add(Dropout(0.2))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-
-    model.add(Conv2D(25, (3, 3), strides=1, padding='same', activation='relu'))
-    model.add(BatchNormalization())
-    model.add(MaxPool2D((2, 2), strides=2, padding='same'))
-
-    model.add(Flatten())
-    model.add(Dense(units=512, activation='relu'))
-    model.add(Dropout(0.3))"""
 
     model = Sequential()
     model.add(
@@ -139,14 +121,13 @@ def testModel(model, data=None):
     print(f"loss: {val_loss}")
 
 
-def testNumImg(imgs: np.array, model: Model):
-    """reshapedImg = imgs.reshape(-1, 784)  # 3d Array ( length * 28 * 28 ) to 2d ( length * 784 )"""
+def testImgs(imgs: np.array, model: Model):
     predictions = model.predict(imgs)  # Model gives percentages to the numbers
     predictions = [np.argmax(prediction) for prediction in predictions]  # numbers with the highest percentages
     corrects = (predictions == should)  # array with 1's (true) by correct predictions and 0's by incorrect predictions
-    print(f"p: {predictions} s: {should} c: {corrects}")
+    # print(f"p: {predictions} s: {should} c: {corrects}")
     accuracy = corrects.sum() / len(corrects) * 100  # accuracy in percentage
-    print(f"a: {accuracy}")
+    # print(f"a: {accuracy}")
     predictions = [Labels[p] for p in predictions]
     return predictions, accuracy
 
@@ -166,8 +147,7 @@ def saveModel(model: keras.Model):
 
 
 def main():
-    data = getData()  # getData()
-
+    data = getData()
     model = createModel(data)
     testModel(model, data)
     saveModel(model)
