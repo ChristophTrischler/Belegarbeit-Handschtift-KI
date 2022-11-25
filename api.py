@@ -5,7 +5,7 @@ import uuid
 import numpy as np
 import cv2
 from datetime import datetime
-import image
+from image import *
 from model import *
 
 router = APIRouter()
@@ -28,15 +28,17 @@ async def postImage(file: UploadFile = File(...)):
 
     # saves the img with current datetime as name
     filename = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')
-    img, nums = image.createNumImages(img)
+    img, nums = readTest(img)
     cv2.imwrite(f"images/{filename}.png", img)
 
-    predictions, acc = testImg(nums, model)  # predictions of the numbers and accuracy
+    for n in nums:
+        predictions = testImgs(n, model)  # predictions of the numbers and accuracy
+        print(predictions)
 
     return {
         "filename": f"{filename}",  
         "nums": [str(p) for p in predictions],  # list of np.ints to normal ints
-        "accuracy": acc,
+        "accuracy": 1,
     }
 
 

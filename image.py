@@ -4,6 +4,10 @@ import numpy as np
 from matplotlib import pyplot as plt
 from imutils import grab_contours
 from sys import argv
+import math
+
+rows = 23
+rowsHeigth = 200
 
 
 def getBlobs(img):
@@ -11,8 +15,7 @@ def getBlobs(img):
     cnts = grab_contours(cnts)
     rects = [cv2.boundingRect(c) for c in cnts]
     rects.sort(key=lambda y: y[0])
-    imgs = [img[y:y+h, x:x+w] for x, y, w, h in rects]
-    imgs = [np.array(i, np.uint8) for i in imgs]
+    imgs = [np.array(img[y:y+h, x:x+w], np.uint8) for x, y, w, h in rects]
     imgs = [cv2.blur(i, (5, 5)) for i in imgs]
     imgs = [cv2.threshold(i, 65, 255, cv2.THRESH_BINARY)[1] for i in imgs]
     imgs = [cv2.resize(i, (32, 32), interpolation=cv2.INTER_AREA) for i in imgs]
@@ -49,11 +52,14 @@ def readTest(img=cv2.imread("examples/Test8.jpeg", 1)):
     # array of the corner points in the img
     pts_src = np.array([red_pxs[up_left], red_pxs[up_right], red_pxs[down_left], red_pxs[down_right]], np.float32)
     # array of points in the new img
-    pts_dst = np.array([[0, 0], [740, 0], [0, 3680], [740, 3680]], np.float32)
+
+    test_height = rows * rowsHeigth
+    print(test_height)
+    pts_dst = np.array([[0, 0], [1400, 0], [0, test_height], [1400, test_height]], np.float32)
     # creating of a rotation matrix
     m = cv2.getPerspectiveTransform(pts_src, pts_dst)
     # rotating the img in to the new format
-    target = cv2.warpPerspective(img, m, (740, 3680))
+    target = cv2.warpPerspective(img, m, (1400, test_height))
     # convert img to grey and invert img
     target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     target = cv2.bitwise_not(target)
@@ -64,14 +70,22 @@ def readTest(img=cv2.imread("examples/Test8.jpeg", 1)):
 
     cv2.imwrite("out/target.png", target)
 
-    imgs = [target[x*360+100:(x+1)*360+10, 400:-60] for x in range(10)]
-    imgs = [cv2.blur(i, (11, 11)) for i in imgs]
-    imgs = [cv2.threshold(i, 50, 255, cv2.THRESH_BINARY)[1] for i in imgs]
+    imgs = [np.array(target[y*rowsHeigth+25:(y+1)*rowsHeigth-5, 455: -10], np.uint8) for y in range(rows)]
+    imgs = [cv2.blur(i, (5, 5)) for i in imgs]
+    imgs = [cv2.threshold(i, 65, 255, cv2.THRESH_BINARY)[1] for i in imgs]
 
     for i, x in enumerate(imgs):
-        cv2.imwrite(f"out/nums/img_{i}.png", cv2.cvtColor(np.invert(x), cv2.COLOR_GRAY2BGR))
+        plt.subplot(5, 5, i+1)
+        plt.imshow(x)
+        cv2.imwrite(f"out/nums/let{i}.png", x)
+    plt.show()
 
     imgs = [getBlobs(image) for image in imgs]
+    """for x in imgs:
+        for i, a in enumerate(x):
+            plt.subplot(5, 5, i+1)
+            plt.imshow(a)
+        plt.show()"""
 
     return target, imgs
 

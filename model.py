@@ -14,12 +14,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-should = [x for x in range(10)]  # array of the nums how they should be
-Labels = should.copy()
+nums = [x for x in range(10)]  # array of the nums how they should be
+Labels = nums.copy()
 abc = [chr(ord('A')+i) for i in range(26)]
 Labels.extend(abc)
 
-should = np.array(should)
+should = np.array(nums)
 Labels = np.array(Labels)
 
 
@@ -124,12 +124,12 @@ def testModel(model, data=None):
 def testImgs(imgs: np.array, model: Model):
     predictions = model.predict(imgs)  # Model gives percentages to the numbers
     predictions = [np.argmax(prediction) for prediction in predictions]  # numbers with the highest percentages
-    corrects = (predictions == should)  # array with 1's (true) by correct predictions and 0's by incorrect predictions
+    # corrects = (predictions == should) # array with 1's (true) by correct predictions and 0's by incorrect predictions
     # print(f"p: {predictions} s: {should} c: {corrects}")
-    accuracy = corrects.sum() / len(corrects) * 100  # accuracy in percentage
+    # accuracy = corrects.sum() / len(corrects) * 100  # accuracy in percentage
     # print(f"a: {accuracy}")
     predictions = [Labels[p] for p in predictions]
-    return predictions, accuracy
+    return predictions  # , accuracy
 
 
 def testImg(img: np.array, model: Model):
