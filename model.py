@@ -23,34 +23,26 @@ should = np.array(nums)
 Labels = np.array(Labels)
 
 
-def load_az_dataset(datasetPath):
+def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
     print("...")
     data = []
     labels = []
 
-    for row in open(datasetPath):  # Openfile and start reading each row
+    for row in open(datasetPath):
+        # in csv row 0 for labels rest image data
         row = row.split(",")
 
-        # row[0] contains label
         label = int(row[0])
 
-        # Other all collumns contains pixel values make a saperate array for that
-        image = np.array([x for x in row[1:]], dtype="uint8")
-
-        # Reshaping image to 28 x 28 pixels
-        image = image.reshape((28, 28))
-
-        # append image to data
+        image = np.array(row[1:], dtype="uint8")
+        image = image.reshape((28, 28))  # reshape from 1d array to 2d array
+        plt.imshow(image)
+        plt.show()
         data.append(image)
-
-        # append label to labels
         labels.append(label)
 
-    # Converting data to numpy array of type float32
     data = np.array(data, dtype='float32')
-
-    # Converting labels to type int
-    labels = np.array(labels, dtype="int")
+    labels = np.array(labels)
 
     return data, labels
 
@@ -65,7 +57,7 @@ def getData():
     # Horizontal stacking labels of train and test set
     mnist_labels = np.hstack([y_train, y_test])
 
-    az_data, az_labels = load_az_dataset("A_ZHandwrittenData.csv")
+    az_data, az_labels = load_az_dataset()
 
     # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are
     # not incorrectly labeled
