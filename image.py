@@ -77,7 +77,7 @@ def readTest(img=cv2.imread("examples/Test8.jpeg", 1)):
 
     cv2.imwrite("out/target.png", target)
 
-    imgs = [np.array(target[y * rowsHeigth + 5:(y + 1) * rowsHeigth - 5, 1300: -200], np.uint8) for y in range(rows)]
+    imgs = [np.array(target[y * rowsHeigth + 5:(y + 1) * rowsHeigth - 5, 1100: -100], np.uint8) for y in range(rows)]
 
     for i, x in enumerate(imgs):
         plt.subplot(5, 5, i+1)

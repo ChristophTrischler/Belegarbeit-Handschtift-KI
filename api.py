@@ -1,3 +1,4 @@
+import keras.models
 from fastapi import FastAPI, UploadFile, File, APIRouter
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -11,7 +12,7 @@ from model import *
 router = APIRouter()
 
 
-model = loadModel()
+model = keras.models.load_model("model2")
 
 
 @router.get("/images/{name}")

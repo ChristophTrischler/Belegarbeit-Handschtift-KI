@@ -36,8 +36,13 @@ def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
 
         image = np.array(row[1:], dtype="uint8")
         image = image.reshape((28, 28))  # reshape from 1d array to 2d array
-        plt.imshow(image)
-        plt.show()
+
+
+        #can be used show letters from the Dataset
+        """if label == ord('k'):
+            plt.imshow(image)
+            plt.show()"""
+
         data.append(image)
         labels.append(label)
 
@@ -57,7 +62,7 @@ def getData():
     # Horizontal stacking labels of train and test set
     mnist_labels = np.hstack([y_train, y_test])
 
-    az_data, az_labels = load_az_dataset()
+    az_data, az_labels = loadCsvDataset()
 
     # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are
     # not incorrectly labeled
@@ -142,7 +147,7 @@ def main():
     data = getData()
     model = createModel(data)
     testModel(model, data)
-    saveModel(model)
+    model.save("model3")
 
 
 if __name__ == "__main__":
