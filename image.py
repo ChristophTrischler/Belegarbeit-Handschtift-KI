@@ -67,28 +67,27 @@ def readTest(img):
 
     # array of points in the new img
     test_height = rows * rowsHeigth
-    print(test_height)
     pts_dst = np.array([[0, 0], [3200, 0], [0, test_height], [3200, test_height]], np.float32)
     # creating of a rotation matrix
     m = cv2.getPerspectiveTransform(pts_src, pts_dst)
     # rotating the img in to the new format
     target = cv2.warpPerspective(img, m, (3200, test_height))
-    # convert img to grey and invert img
+    # convert img to grey and invert color
     target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     target = cv2.bitwise_not(target)
-    # filter the img by the brightness
+    # blur the filter the img by the brightness
     target = cv2.medianBlur(target, ksize=15)
     target = cv2.threshold(target, 120, 255, cv2.THRESH_BINARY)[1]
 
     cv2.imwrite("out/target.png", target)
 
-    imgs = [np.array(target[y * rowsHeigth + 5:(y + 1) * rowsHeigth - 5, 1300: -200], np.uint8) for y in range(rows)]
+    imgs = [np.array(target[y * rowsHeigth + 5:(y + 1) * rowsHeigth - 5, 1100: -100], np.uint8) for y in range(rows)]
 
-    for i, x in enumerate(imgs):
+    """for i, x in enumerate(imgs):
         plt.subplot(5, 5, i+1)
         plt.imshow(x)
         cv2.imwrite(f"out/nums/let{i}.png", x)
-    plt.show()
+    plt.show()"""
 
     imgs = [getBlobs(image) for image in imgs]
 
@@ -98,17 +97,17 @@ def readTest(img):
 def main():
     m = loadModel()
     img = cv2.imread(argv[1])
-    plt.imshow(img)
-    plt.show()
     t, imgs = readTest(img)
+
     for i, y in enumerate(imgs):
         n = 1
         l: int = math.ceil(math.sqrt(len(y)))
+
         for x in y:
             plt.subplot(l, l, n)
             n += 1
             plt.imshow(x)
-            #  cv2.imwrite(f"out/nums/img_{i}.png", x)
+
         plt.title(f"{i}")
         plt.show()
         print(testImgs(y, m))

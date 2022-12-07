@@ -1,3 +1,4 @@
+import keras.models
 from fastapi import FastAPI, UploadFile, File, APIRouter
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -11,7 +12,7 @@ from model import *
 router = APIRouter()
 
 
-model = loadModel()
+model = keras.models.load_model("model")
 
 
 @router.get("/images/{name}")
@@ -31,14 +32,13 @@ async def postImage(file: UploadFile = File(...)):
     img, nums = readTest(img)
     cv2.imwrite(f"images/{filename}.png", img)
 
-    for n in nums:
-        predictions = testImgs(n, model)  # predictions of the numbers and accuracy
-        print(predictions)
+    predictions = [testImgs(n, model) for n in nums]
+    for p in predictions:
+        print(p)
 
     return {
-        "filename": f"{filename}",  
-        "nums": [str(p) for p in predictions],  # list of np.ints to normal ints
-        "accuracy": 1,
+        "filename": f"{filename}",
+        "result": predictions,
     }
 
 

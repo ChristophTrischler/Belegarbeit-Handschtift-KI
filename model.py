@@ -36,8 +36,13 @@ def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
 
         image = np.array(row[1:], dtype="uint8")
         image = image.reshape((28, 28))  # reshape from 1d array to 2d array
-        plt.imshow(image)
-        plt.show()
+
+
+        #can be used show letters from the Dataset
+        """if label == ord('k'):
+            plt.imshow(image)
+            plt.show()"""
+
         data.append(image)
         labels.append(label)
 
@@ -111,7 +116,7 @@ def testModel(model, data=None):
 
 
 def testImgs(imgs: np.array, model: Model):
-    predictions = model.predict(imgs)  # Model gives percentages to the numbers
+    predictions = model.predict(imgs, use_multiprocessing=True )  # Model gives percentages to the numbers
     predictions = [np.argmax(prediction) for prediction in predictions]  # numbers with the highest percentages
     # corrects = (predictions == should) # array with 1's (true) by correct predictions and 0's by incorrect predictions
     # print(f"p: {predictions} s: {should} c: {corrects}")
@@ -139,7 +144,7 @@ def main():
     data = getData()
     model = createModel(data)
     testModel(model, data)
-    saveModel(model)
+    model.save("model3")
 
 
 if __name__ == "__main__":

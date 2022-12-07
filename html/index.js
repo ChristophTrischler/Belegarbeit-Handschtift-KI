@@ -3,7 +3,7 @@ const template = document.getElementById("imgTemplate");
 let files = []
 
 document.getElementById("fileupload")
-    .addEventListener("change", event => files = [...event.target.files] );
+    .addEventListener("change", event => files = [...event.target.files]);
 
 document.getElementById("submit")
     .addEventListener("click", ev => {
@@ -19,9 +19,11 @@ document.getElementById("submit")
                      const img = copy.getElementById("img");
                      img.src = "/api/images/"+filename+".png";
                      img.alt = filename
-                     copy.getElementById("text").textContent =  data.nums.join(" - ") +"=>"+ data.accuracy + "%";
-                     copy.getElementById("heading").textContent += filename
-                     imagesDiv.appendChild(copy)
+                     data.result.forEach( letters => {
+                         copy.getElementById("text").innerHTML += "<p>" + letters.join(" - ") + "</p>";
+                     } );
+                     copy.getElementById("heading").textContent += filename;
+                     imagesDiv.appendChild(copy);
                  }
             );
         });
