@@ -119,7 +119,7 @@ def testModel(model, data=None):
 
 
 def testImgs(imgs: np.array, model: Model):
-    predictions = model.predict(imgs)  # Model gives percentages to the numbers
+    predictions = model.predict(imgs, use_multiprocessing=True )  # Model gives percentages to the numbers
     predictions = [np.argmax(prediction) for prediction in predictions]  # numbers with the highest percentages
     # corrects = (predictions == should) # array with 1's (true) by correct predictions and 0's by incorrect predictions
     # print(f"p: {predictions} s: {should} c: {corrects}")

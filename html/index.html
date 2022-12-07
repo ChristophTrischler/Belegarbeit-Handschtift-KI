@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <title>API</title>
     <script defer src="index.js"></script>
-    <style>
-        .center {
-            align-content: center;
-        }
-
-        .space {
-
-        }
-    </style>
 </head>
 <body>
     <div class="center">
@@ -22,12 +13,41 @@
         <div id="images"></div>
     </div>
     <template id="imgTemplate" class = "img" >
-        <div>
+        <div class="content">
             <h3 id="heading">Img: </h3>
-            <img id="img"  src="" alt="" height="3600px" width="1400px">
-            <div id="text"> </div>
+            <div style="display: flex">
+                <img id="img"  src="" alt="" height="600px" width="340px">
+                <div id="text"> </div>
+            </div>
         </div>
-
     </template>
 </body>
+<style>
+    body {
+        background: #161B2C;
+        width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #text {
+        margin-left: 10px;
+        padding-left: 10px;
+        border-left: 1px solid #333F66;
+        line-height: 10px;
+    }
+
+    .content {
+        border-radius: 10px;
+        padding: 20px;
+        background: #111522;
+        margin-top: 50px;
+    }
+
+    .center {
+        color: aliceblue;
+        font-family: "Helvetica Neue", sans-serif;
+    }
+
+</style>
 </html>
