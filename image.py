@@ -24,19 +24,24 @@ def getBlobs(img):
     cnts = grab_contours(cnts)
     rects = [cv2.boundingRect(c) for c in cnts]
     # filter by the area of the rects from the blobs
-    rects = [makeSquare((x, y, w, h)) for x, y, w, h in rects if w * h > 400]  # img of an 'I' w = 2 h = 200 -> w = 200 h = 200
-    rects.sort(key=lambda e: e[0])  # e->{x, y} => sort by x position
-    imgs = [np.array(img[y:y + h, x:x + w], np.uint8) for x, y, w, h in rects]
-    imgs = [cv2.resize(i, (32, 32), interpolation=cv2.INTER_AREA) for i in imgs]
+    # img of an 'I' w = 2 h = 200 -> w = 200 h = 200
+    # rects = [makeSquare((x, y, w, h)) for x, y, w, h in rects if w * h > 400]
+    rects.sort(key=lambda position: position[0])  # position->{x, y} => sort by x position
+    imgs = [np.array(img[y:y + h, x:x + w], np.uint8) for x, y, w, h in rects if w * h > 400]  # create images from the rects
+    imgs = [cv2.resize(i, (32, 32), interpolation=cv2.INTER_AREA) for i in imgs]  # resize for model
 
     imgs = np.array(imgs, np.float32)
     imgs = np.expand_dims(imgs, axis=-1)
     imgs /= 255
 
+    for image in imgs:
+        plt.imshow(image)
+        plt.show()
+
     return imgs
 
 
-def readTest(img=cv2.imread("examples/Test8.jpeg", 1)):
+def readTest(img):
     height, width, _ = img.shape
 
     # FIND THE RED POINTS

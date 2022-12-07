@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 nums = [x for x in range(10)]  # array of the nums how they should be
 Labels = nums.copy()
 abc = [chr(ord('A')+i) for i in range(26)]
-Labels.extend(abc)
+Labels.extend( abc )
 
 should = np.array(nums)
 Labels = np.array(Labels)
@@ -57,7 +57,7 @@ def getData():
     # Horizontal stacking labels of train and test set
     mnist_labels = np.hstack([y_train, y_test])
 
-    az_data, az_labels = load_az_dataset()
+    az_data, az_labels = loadCsvDataset()
 
     # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are
     # not incorrectly labeled
@@ -73,9 +73,6 @@ def getData():
     data = np.array(data, dtype="float32")
     data = np.expand_dims(data, axis=-1)
     data /= 255.0  # from int 0 to 255 to float 0 to 1
-
-    """le = LabelBinarizer()
-    labels = le.fit_transform(labels)"""
 
     (x_train, x_test, y_train, y_test) = train_test_split(data, labels, test_size=0.20, stratify=labels,
                                                           random_state=42)
