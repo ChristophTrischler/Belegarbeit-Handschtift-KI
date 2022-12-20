@@ -104,7 +104,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
-env/
+src/env/
 venv/
 ENV/
 env.bak/
@@ -128,8 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/env/
 
-images/
-out/
+src/images/
+src/out/
 .idea/
-.\A_ZHandwrittenData.csv
-model/
+src/A_ZHandwrittenData.csv

@@ -1,5 +1,5 @@
 # Belegarbeit-Handschtift-KI
-    ... 
+    
 
 
 
@@ -8,4 +8,10 @@
 
     pip install -r requirements.txt 
     
-#
+# Run web app:
+    uvicorn src.main:app 
+
+# Run and use it with other devices:
+    uvicorn src.main:app --host 0.0.0.0
+    
+

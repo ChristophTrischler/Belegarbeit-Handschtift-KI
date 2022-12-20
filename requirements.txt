@@ -8,3 +8,4 @@ Fastapi
 python-multipart
 scikit-learn
 imutils
+pandas

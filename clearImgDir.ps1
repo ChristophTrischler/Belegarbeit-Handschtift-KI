@@ -1,1 +1,0 @@
-dir images | rm
