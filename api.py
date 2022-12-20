@@ -8,6 +8,8 @@ import cv2
 from datetime import datetime
 from image import *
 from model import *
+from data import *
+import json
 
 router = APIRouter()
 
@@ -20,8 +22,9 @@ async def getImg(name: str):
     return FileResponse(f"images/{name}")
 
 
-@router.post("/image")
-async def postImage(file: UploadFile = File(...)):
+@router.post("/image/{rows}")
+async def postImage(rows: int, file: UploadFile = File(...)):
+    print("get image...")
     # loads img
     content = await file.read()
     nparr = np.fromstring(content, np.uint8)
@@ -29,10 +32,15 @@ async def postImage(file: UploadFile = File(...)):
 
     # saves the img with current datetime as name
     filename = datetime.now().strftime('%d-%m-%Y-%H-%M-%S')
-    img, nums = readTest(img)
+
+    cv2.imwrite(f"images/In_{filename}.png", img)
+
+    img, nums = readTest(img, rows)
     cv2.imwrite(f"images/{filename}.png", img)
 
     predictions = [testImgs(n, model) for n in nums]
+    compareTest(predictions)
+
     for p in predictions:
         print(p)
 
@@ -40,6 +48,11 @@ async def postImage(file: UploadFile = File(...)):
         "filename": f"{filename}",
         "result": predictions,
     }
+
+
+@router.get("/res")
+async def getRes():
+    return  loadRes()
 
 
 @router.get("/")

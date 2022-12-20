@@ -1,0 +1,72 @@
+{
+  "A": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "G": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "D": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "0":{
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "2": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "Z": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "1":{
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "I": {
+      "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+ "7": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+ },
+  "4": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+ "3": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+ },
+  "8": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "5": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  },
+  "9": {
+    "guessed": 0,
+    "all": 0,
+    "percentage": 1.0
+  }
+}

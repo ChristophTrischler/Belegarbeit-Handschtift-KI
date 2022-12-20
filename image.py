@@ -6,8 +6,16 @@ from imutils import grab_contours
 from sys import argv
 import math
 
-rows = 23
 rowsHeigth = 200
+
+
+def increaseContrast(img):
+    lab = cv2.cvtColor(img, cv2.COLOR_RGB2LAB)
+    light, a, b = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+    light = clahe.apply(light)
+    lab = cv2.merge((light, a, b))
+    return cv2.cvtColor(lab, cv2.COLOR_LAB2RGB)
 
 
 def makeSquare(r):
@@ -34,21 +42,28 @@ def getBlobs(img):
     imgs = np.expand_dims(imgs, axis=-1)
     imgs /= 255
 
-    for image in imgs:
+    """for image in imgs:
         plt.imshow(image)
-        plt.show()
+        plt.show()"""
 
     return imgs
 
 
-def readTest(img):
+def readTest(img, rows):
     height, width, _ = img.shape
+    cv2.imwrite("out/in.png", img)
+
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = increaseContrast(img)
 
     # FIND THE RED POINTS
     # create convert to hsv for better color specification
+
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # create mask with only red pixels
-    mask = cv2.inRange(hsv, np.array([150, 120, 100]), np.array([200, 200, 200]))
+
+    mask = cv2.inRange(hsv, np.array([120, 120, 75]), np.array([200, 200, 230]))
+
     # test img output
     mask_img = cv2.bitwise_and(img, img, mask=mask)
     cv2.imwrite("out/mask_img.png", mask_img)
@@ -75,9 +90,12 @@ def readTest(img):
     # convert img to grey and invert color
     target = cv2.cvtColor(target, cv2.COLOR_BGR2GRAY)
     target = cv2.bitwise_not(target)
+    cv2.imwrite("out/test.png", target)
     # blur the filter the img by the brightness
-    target = cv2.medianBlur(target, ksize=15)
-    target = cv2.threshold(target, 120, 255, cv2.THRESH_BINARY)[1]
+    target = cv2.medianBlur(target, ksize=9)
+    cv2.imwrite("out/test2.png", target)
+    target = cv2.threshold(target, 55, 255, cv2.THRESH_BINARY)[1]
+    cv2.imwrite("out/test3.png", target)
 
     cv2.imwrite("out/target.png", target)
 

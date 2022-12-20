@@ -37,7 +37,6 @@ def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
         image = np.array(row[1:], dtype="uint8")
         image = image.reshape((28, 28))  # reshape from 1d array to 2d array
 
-
         #can be used show letters from the Dataset
         """if label == ord('k'):
             plt.imshow(image)
