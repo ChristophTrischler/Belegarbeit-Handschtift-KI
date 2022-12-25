@@ -12,6 +12,8 @@
     uvicorn src.main:app 
 
 # Run and use it with other devices:
+    !!!NOT SECURE DON'T USE IN PUBLIC NETWORKS!!! 
     uvicorn src.main:app --host 0.0.0.0
+    
     
 

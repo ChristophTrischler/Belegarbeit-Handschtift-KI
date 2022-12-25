@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>API</title>
+    <script defer src="index.js"></script>
+</head>
+<body>
+    <div class="center">
+        <h1>Belegarbeit-Handschrift-KI</h1>
+        <input type="file" name="imgFile" id="fileupload" multiple="multiple">
+        <input type="number" name="rows" id="rowNumbers" value=15>
+        <input type="submit" name="submit" id="submit">
+        <button type="button" id="getRes">Get Result</button>
+        <div id="images"></div>
+    </div>
+    <template id="imgTemplate" class = "img" >
+        <div class="content">
+            <h3 id="heading">Img: </h3>
+            <div style="display: flex">
+                <img id="img"  src="" alt="" height="600px" width="340px">
+                <div id="text"> </div>
+            </div>
+        </div>
+    </template>
+    <template id="resTemplate" class = "img" >
+        <div class="content">
+            <h3> Result</h3>
+            <div id="container">
+            </div>
+        </div>
+    </template>
+    <TEMPLATE id="charTemplate">
+        <div class="char-container">
+            <h4 id="charH"></h4>
+            <p id="right">right: </p>
+            <p id="all">all: </p>
+            <p id="percentage">%: </p>
+        </div>
+    </TEMPLATE>
+</body>
+<style>
+    body {
+        background: #161B2C;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #rowNumbers {
+        width: 50px;
+    }
+
+    #container {
+        display: grid;
+        grid-template-columns: repeat(8, 5fr);
+        gap: 30px;
+    }
+
+    #text {
+        margin-left: 10px;
+        padding-left: 10px;
+        border-left: 1px solid #333F66;
+        line-height: 10px;
+    }
+
+    .content {
+        border-radius: 10px;
+        padding: 20px;
+        background: #111522;
+        margin-top: 50px;
+    }
+
+    .center {
+        color: aliceblue;
+        font-family: "Helvetica Neue", sans-serif;
+    }
+
+    .char-container{
+        width: 100px;
+        border: 1px solid aliceblue;
+        border-radius: 3px;
+        text-align: center;
+    }
+
+    ex
+</style>
+</html>
