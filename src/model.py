@@ -23,7 +23,7 @@ should = np.array(nums)
 Labels = np.array(Labels)
 
 
-def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
+def loadCsvDataset(datasetPath="src/A_ZHandwrittenData.csv"):
     print("...")
     data = []
     labels = []
@@ -116,12 +116,8 @@ def testModel(model, data=None):
 def testImgs(imgs: np.array, model: Model):
     predictions = model.predict(imgs, use_multiprocessing=True )  # Model gives percentages to the numbers
     predictions = [np.argmax(prediction) for prediction in predictions]  # numbers with the highest percentages
-    # corrects = (predictions == should) # array with 1's (true) by correct predictions and 0's by incorrect predictions
-    # print(f"p: {predictions} s: {should} c: {corrects}")
-    # accuracy = corrects.sum() / len(corrects) * 100  # accuracy in percentage
-    # print(f"a: {accuracy}")
     predictions = [Labels[p] for p in predictions]
-    return predictions  # , accuracy
+    return predictions
 
 
 def testImg(img: np.array, model: Model):
