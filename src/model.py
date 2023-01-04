@@ -8,16 +8,16 @@ from keras.optimizers import Adam
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
-import pandas as pd
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
 
 nums = [x for x in range(10)]  # array of the nums how they should be
-Labels = nums.copy()
+Labels = nums.copy()    # create Label translation
 abc = [chr(ord('A')+i) for i in range(26)]
-Labels.extend( abc )
+Labels.extend(abc)
+
 
 should = np.array(nums)
 Labels = np.array(Labels)
@@ -37,7 +37,7 @@ def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
         image = np.array(row[1:], dtype="uint8")
         image = image.reshape((28, 28))  # reshape from 1d array to 2d array
 
-        #can be used show letters from the Dataset
+        # can be used show letters from the Dataset
         """if label == ord('k'):
             plt.imshow(image)
             plt.show()"""
@@ -52,7 +52,7 @@ def loadCsvDataset(datasetPath="A_ZHandwrittenData.csv"):
 
 
 def getData():
-    # load data from tensorflow framework
+    # load 0-9 data
     (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
     # Stack train data and test data to form single array
@@ -63,12 +63,10 @@ def getData():
 
     az_data, az_labels = loadCsvDataset()
 
-    # the MNIST dataset occupies the labels 0-9, so let's add 10 to every A-Z label to ensure the A-Z characters are
-    # not incorrectly labeled
+    # 0-9 -> numbers 10-36 -> ABC
+    az_labels += 10  # ABC: 0-26 -> 10-36
 
-    az_labels += 10
-
-    # stack the A-Z data and labels with the MNIST digits data and labels
+    # stack ABC and numbers
 
     data = np.vstack([az_data, mnist_data])
     labels = np.hstack([az_labels, mnist_labels])
@@ -91,17 +89,18 @@ def createModel(data=None):
 
     model = Sequential()
     model.add(
-        ResNet50V2(
+        ResNet50(
             include_top=False,
             input_shape=(32, 32, 1),
             weights=None,
             pooling="avg"
         )
     )
-    model.add(Dense(units=36, activation='softmax'))  # output layer
+    model.add(Dense(units=72, activation="relu"))
+    model.add(Dense(units=36, activation="softmax"))  # output layer
 
     model.compile(optimizer='Adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    model.fit(x_train, y_train, epochs=50)
+    model.fit(x_train, y_train, epochs=20)
     return model
 
 
@@ -143,7 +142,7 @@ def main():
     data = getData()
     model = createModel(data)
     testModel(model, data)
-    model.save("model3")
+    model.save("model4")
 
 
 if __name__ == "__main__":
