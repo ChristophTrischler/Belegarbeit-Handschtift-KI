@@ -130,15 +130,11 @@ def loadModel():
     return model
 
 
-def saveModel(model: keras.Model):
-    model.save("model")
-
-
 def main():
     data = getData()
     model = createModel(data)
     testModel(model, data)
-    model.save("model4")
+    model.save("model")
 
 
 if __name__ == "__main__":

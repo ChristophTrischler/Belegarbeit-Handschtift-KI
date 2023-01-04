@@ -14,7 +14,7 @@ import json
 router = APIRouter()
 
 
-model = keras.models.load_model("src/models/model4")
+model = keras.models.load_model("src/models/model")
 
 
 @router.get("/images/{name}")
